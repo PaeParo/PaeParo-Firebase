@@ -63,4 +63,10 @@ npm run start-emulator
 <br>
 
 ## 서비스 이용
-위의 모든 과정을 마치면 각자 개인의 Local PC에서 Firebase Functions 서비스를 이용할 수 있습니다. Android Emulator에서 접속할 때는 "10.0.2.2:5001"로 접속해야합니다. Visual Studio Code, 또는 개별 Command 창에서 실행했을 때, 해당 창이 종료되지 않도록 주의해주세요. 창이 종료되면 Local Firebase Functions Emulator도 함께 종료됩니다.
+- 위의 모든 과정을 마치면 각자 개인의 Local PC에서 Firebase Functions 서비스를 이용할 수 있습니다. 
+
+- Android Emulator에서 접속할 때는 "10.0.2.2:5001"로 접속해야합니다. 
+
+- Visual Studio Code, 또는 개별 Command 창에서 실행했을 때, 해당 창이 종료되지 않도록 주의해주세요. 창이 종료되면 Local Firebase Functions Emulator도 함께 종료됩니다.
+
+- Firebase Functions Emulator 실행 후 'http://127.0.0.1:4000/'에 접속하여 상태를 확인할 수 있습니다.

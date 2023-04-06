@@ -20,3 +20,5 @@ npm-debug.log
 typings
 yarn.lock
 .DS_Store
+ui-debug.log
+functions/ui-debug.log

@@ -55,9 +55,12 @@ firebase use paeparo
 <br>
 
 #### 3. Firebase Functions Emulator 실행
-다음 명령어를 실행해주세요.
+다음 명령어 두 가지 중 하나만 실행해주세요. 
 ```bash
+// 에뮬레이터 실행만 하고 싶을 경우
 npm run start-emulator
+// 에뮬레이터 실행 중 변경사항을 바로 적용하도록 하고 싶을 경우
+npm run start-emulator-hotload
 ```
 
 <br>

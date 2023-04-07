@@ -16,9 +16,8 @@ integration_test/functions/firebase-functions.tgz
 integration_test/functions/package.json
 lib
 node_modules
-npm-debug.log
 typings
 yarn.lock
 .DS_Store
-ui-debug.log
-functions/ui-debug.log
+*.log
+functions/*.log

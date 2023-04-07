@@ -4,22 +4,22 @@ import * as admin from "firebase-admin";
 admin.initializeApp();
 
 const firestore = admin.firestore();
+const firestoreTripUpdateRef = firestore.collection("trip_update");
+const firestoreLocationUpdateRef = firestore.collection("location_update");
 const firestoreUserRef = firestore.collection("users");
+const firestoreTripRef = firestore.collection("trips");
+const firestoreEventRef = firestore.collection("events");
+const firestorePostRef = firestore.collection("posts");
+const firestoreCommentRef = firestore.collection("comments");
 
-export const helloWorld = functions.https.onRequest((request, response) => {
-    functions.logger.info("Hello logs!", { structuredData: true });
-    response.send("Hello from Firebase!");
-});
-
-export const createUser = functions.https.onCall(async (data, context) => {
-    try {
-        const userId = data.user_id
-        const user = data.user;
-        const newUserRef = firestoreUserRef.doc(userId);
-        await newUserRef.set(user);
-        return { success: true, userId: newUserRef.id };
-    } catch (error) {
-        return { success: false, error };
-    }
-});
-
+export {
+    firestore
+    , functions
+    , firestoreTripUpdateRef
+    , firestoreLocationUpdateRef
+    , firestoreUserRef
+    , firestoreTripRef
+    , firestoreEventRef
+    , firestorePostRef
+    , firestoreCommentRef
+};

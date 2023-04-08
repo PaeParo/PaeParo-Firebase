@@ -3,7 +3,7 @@ Firebase Functions를 이용하여 PaeParo의 Back-End 작업을 관리합니다
 
 <br>
 
-# Local Firebase Functions Emulator
+# Local Firebase Functions Emulator (2023-04-08 기준 원격 서버로 Functions가 배포되었으므로 아래 내용은 더 이상 필수 진행사항이 아닙니다)
 실제 Firebase Functions에 배포되기 전, 개인 로컬 컴퓨터에서 Firebase Functions Emulator를 이용하여 미리 테스트를 진행해 볼 수 있습니다. 다음 설정을 통해 실제 Firebase Functions에서와 동일한 기능을 사용할 수 있습니다. (단, Local에서만 동작 가능)
 
 <br>

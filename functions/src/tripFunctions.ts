@@ -1,4 +1,5 @@
-import { firestore, functions, firestoreTripRef } from "./index";
+/* eslint-disable */
+import { firestore, functions, firestoreTripRef } from "./firebase";
 import { ResponseCodes } from "./responseCode";
 
 /**

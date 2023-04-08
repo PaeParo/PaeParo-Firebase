@@ -1,25 +1,7 @@
-import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
+/* eslint-disable */
+var userFunctions = require('./userFunctions');
+var tripFunctions = require('./tripFunctions');
+var postFunctions = require('./postFunctions');
+var commentFunctions = require('./commentFunctions');
 
-admin.initializeApp();
-
-const firestore = admin.firestore();
-const firestoreTripUpdateRef = firestore.collection("trip_update");
-const firestoreLocationUpdateRef = firestore.collection("location_update");
-const firestoreUserRef = firestore.collection("users");
-const firestoreTripRef = firestore.collection("trips");
-const firestoreEventRef = firestore.collection("events");
-const firestorePostRef = firestore.collection("posts");
-const firestoreCommentRef = firestore.collection("comments");
-
-export {
-    firestore
-    , functions
-    , firestoreTripUpdateRef
-    , firestoreLocationUpdateRef
-    , firestoreUserRef
-    , firestoreTripRef
-    , firestoreEventRef
-    , firestorePostRef
-    , firestoreCommentRef
-};
+export { login } from './userFunctions';

@@ -1,12 +1,13 @@
-import { firestore, functions, firestoreUserRef } from "./index";
+/* eslint-disable */
+import { firestore, admin, functions, firestoreUserRef } from "./firebase";
 import { ResponseCodes } from "./responseCode";
 
 /**
- * 1-00. 사용자 로그인 처리
+ * 1-01. 사용자 로그인
  */
-export const loginWithGoogle = functions.https.onCall(async (data) => {
+export const login = functions.https.onCall(async (data) => {
     try {
-        const idToken = data.idToken;
+        const idToken = data.id_token;
         const decodedToken = await admin.auth().verifyIdToken(idToken);
         const userId = decodedToken.uid;
 
@@ -23,31 +24,25 @@ export const loginWithGoogle = functions.https.onCall(async (data) => {
                 travel_style: [],
                 liked_posts: []
             });
-            return { success: true, result: "User nickname not set" };
-        } else if (userSnapshot.data()?.nickname == "") { // 사용자가 등록되어있지만 닉네임이 설정되어있지 않을 경우
-            return { success: true, result: "User nickname not set" };
+            console.log("[userFunctions/loginWithGoogle] New user created: " + userId);
+            return { result: ResponseCodes.NICKNAME_NOT_SET };
         }
-        else if (userSnapshot.data()?.age == 0) { // 사용자가 등록되어있지만 세부정보가 설정되어있지 않을 경우
-            return { success: true, result: "User detail info not set" };
-        }
-    } catch (error: unknown) {
-        console.log(error);
-        return { success: false, error: "Unknown error" };
-    }
-});
 
-/**
- * 1-01. 새로운 사용자 생성
- */
-export const createUser = functions.https.onCall(async (data, context) => {
-    try {
-        const userId = data.user_id
-        const user = data.user;
-        const newUserRef = firestoreUserRef.doc(userId);
-        await newUserRef.set(user);
-        return { success: true, userId: newUserRef.id };
-    } catch (error) {
-        return { success: false, error };
+        if (userSnapshot.data()?.nickname == "") { // 사용자가 등록되어있지만 닉네임이 설정되어있지 않을 경우
+            console.log("[userFunctions/loginWithGoogle] User nickname not set: " + userId)
+            return { result: ResponseCodes.NICKNAME_NOT_SET };
+        }
+
+        if (userSnapshot.data()?.age == 0) { // 사용자가 등록되어있지만 세부정보가 설정되어있지 않을 경우
+            console.log("[userFunctions/loginWithGoogle] User detail info not set: " + userId)
+            return { result: ResponseCodes.DETAIL_INFO_NOT_SET };
+        }
+
+        console.log("[userFunctions/loginWithGoogle] User logged in: " + userId);
+        return { result: ResponseCodes.LOGIN_SUCCESS }
+    } catch (error: unknown) {
+        console.log("[userFunctions/loginWithGoogle] Error: " + error);
+        return { result: ResponseCodes.UNKNOWN_ERROR };
     }
 });
 

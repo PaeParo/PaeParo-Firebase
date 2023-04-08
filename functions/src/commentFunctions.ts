@@ -1,4 +1,5 @@
-import { firestore, functions, firestoreCommentRef } from "./index";
+/* eslint-disable */
+import { firestore, functions, firestoreCommentRef } from "./firebase";
 import { ResponseCodes } from "./responseCode";
 
 /**

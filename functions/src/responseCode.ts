@@ -3,6 +3,9 @@ export const ResponseCodes = {
     INVALID_ID_TOKEN: "auth/invalid-id-token",
     UNKNOWN_ERROR: "functions/unknown-error",
 
+    SUCCESS: "success",
+    FAILURE: "failure",
+
     LOGIN_SUCCESS: "user/login-success",
     USER_NOT_FOUND: "user/user-not-found",
     NICKNAME_NOT_SET: "user/nickname-not-set",

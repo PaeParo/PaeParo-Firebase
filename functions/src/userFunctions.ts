@@ -51,7 +51,25 @@ export const login = functions.https.onCall(async (data) => {
  */
 export const updateUserNickname = functions.https.onCall(async (data, context) => {
     try {
+        const userId = data.user_id
+        const nickname = data.nickname
+
+        // 닉네임 중복 확인
+        const userSnapshot = await firestoreUserRef.where("nickname", "==", nickname).limit(1).get();
+        if (userSnapshot.docs.length > 0) {
+            console.log("[userFunctions/updateUserNickname] Nickname already in use: " + nickname);
+            return { result: ResponseCodes.NICKNAME_ALREADY_IN_USE };
+        }
+
+        await firestoreUserRef.doc(userId).update({
+            nickname: nickname
+        });
+        
+        console.log("[userFunctions/updateUserNickname] User nickname updated: " + userId);
+        return { result: ResponseCodes.SUCCESS };
     } catch (error) {
+        console.log("[userFunctions/updateUserNickname] Error: " + error);
+        return { result: ResponseCodes.UNKNOWN_ERROR };
     }
 });
 

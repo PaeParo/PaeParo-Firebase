@@ -10,9 +10,7 @@ export const login = functions.https.onCall(async (data) => {
         const idToken = data.id_token;
         const decodedToken = await admin.auth().verifyIdToken(idToken);
         const userId = decodedToken.uid;
-
-        // 사용자 등록 확인
-        const userRef = admin.firestore().collection("users").doc(userId);
+        const userRef = firestoreUserRef.doc(userId);
         const userSnapshot = await userRef.get();
 
         if (!userSnapshot.exists) { // 사용자가 등록되지 않았을 경우
@@ -53,9 +51,8 @@ export const updateUserNickname = functions.https.onCall(async (data, context) =
     try {
         const userId = data.user_id
         const nickname = data.nickname
-
-        // 닉네임 중복 확인
         const userSnapshot = await firestoreUserRef.where("nickname", "==", nickname).limit(1).get();
+        
         if (userSnapshot.docs.length > 0) {
             console.log("[userFunctions/updateUserNickname] Nickname already in use: " + nickname);
             return { result: ResponseCodes.NICKNAME_ALREADY_IN_USE };
@@ -100,14 +97,14 @@ export const likePost = functions.https.onCall(async (data, context) => {
         const userId = data.user_id;
         const postRef = firestorePostRef.doc(postId)
         const userRef = firestoreUserRef.doc(userId)
-        const batch = firestore.batch();
 
-        const postSnapshot = await postRef.get();
-        if (!postSnapshot.exists) {
+        if (!(await postRef.get()).exists) {
             console.log("[userFunctions/cancelLikePost] Post not found: " + postId);
             return { result: ResponseCodes.POST_NOT_FOUND };
         }
 
+        const batch = firestore.batch();
+        
         batch.update(postRef, "likes", admin.firestore.FieldValue.increment(1))
         batch.update(userRef, "liked_posts", admin.firestore.FieldValue.arrayUnion(postId))
 
@@ -131,8 +128,7 @@ export const cancelLikePost = functions.https.onCall(async (data, context) => {
         const postRef = firestorePostRef.doc(postId)
         const userRef = firestoreUserRef.doc(userId)
 
-        const postSnapshot = await postRef.get();
-        if (!postSnapshot.exists) {
+        if (!(await postRef.get()).exists) {
             console.log("[userFunctions/cancelLikePost] Post not found: " + postId);
             return { result: ResponseCodes.POST_NOT_FOUND };
         }

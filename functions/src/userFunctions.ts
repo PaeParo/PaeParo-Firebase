@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { firestore, admin, functions, firestoreUserRef } from "./firebase";
+import { firestore, admin, functions, firestoreUserRef, firestorePostRef } from "./firebase";
 import { ResponseCodes } from "./responseCode";
 
 /**
@@ -39,7 +39,7 @@ export const login = functions.https.onCall(async (data) => {
         }
 
         console.log("[userFunctions/loginWithGoogle] User logged in: " + userId);
-        return { result: ResponseCodes.LOGIN_SUCCESS }
+        return { result: ResponseCodes.SUCCESS }
     } catch (error: unknown) {
         console.log("[userFunctions/loginWithGoogle] Error: " + error);
         return { result: ResponseCodes.UNKNOWN_ERROR };
@@ -78,7 +78,16 @@ export const updateUserNickname = functions.https.onCall(async (data, context) =
  */
 export const updateUserDetailInfo = functions.https.onCall(async (data, context) => {
     try {
+        const userId = data.user_id
+        const updateFields = data.update_fields
+
+        await firestoreUserRef.doc(userId).update(updateFields);
+
+        console.log("[userFunctions/updateUserDetailInfo] User detail info updated: " + userId);
+        return { result: ResponseCodes.SUCCESS };
     } catch (error) {
+        console.log("[userFunctions/updateUserDetailInfo] Error: " + error);
+        return { result: ResponseCodes.UNKNOWN_ERROR };
     }
 });
 
@@ -87,7 +96,28 @@ export const updateUserDetailInfo = functions.https.onCall(async (data, context)
  */
 export const likePost = functions.https.onCall(async (data, context) => {
     try {
+        const postId = data.post_id;
+        const userId = data.user_id;
+        const postRef = firestorePostRef.doc(postId)
+        const userRef = firestoreUserRef.doc(userId)
+        const batch = firestore.batch();
+
+        const postSnapshot = await postRef.get();
+        if (!postSnapshot.exists) {
+            console.log("[userFunctions/cancelLikePost] Post not found: " + postId);
+            return { result: ResponseCodes.POST_NOT_FOUND };
+        }
+
+        batch.update(postRef, "likes", admin.firestore.FieldValue.increment(1))
+        batch.update(userRef, "liked_posts", admin.firestore.FieldValue.arrayUnion(postId))
+
+        await batch.commit();
+
+        console.log("[userFunctions/likePost] Post liked: " + postId);
+        return { result: ResponseCodes.SUCCESS };
     } catch (error) {
+        console.log("[userFunctions/likePost] Error: " + error);
+        return { result: ResponseCodes.UNKNOWN_ERROR };
     }
 });
 
@@ -96,7 +126,29 @@ export const likePost = functions.https.onCall(async (data, context) => {
  */
 export const cancelLikePost = functions.https.onCall(async (data, context) => {
     try {
+        const postId = data.post_id;
+        const userId = data.user_id;
+        const postRef = firestorePostRef.doc(postId)
+        const userRef = firestoreUserRef.doc(userId)
+
+        const postSnapshot = await postRef.get();
+        if (!postSnapshot.exists) {
+            console.log("[userFunctions/cancelLikePost] Post not found: " + postId);
+            return { result: ResponseCodes.POST_NOT_FOUND };
+        }
+
+        const batch = firestore.batch();
+
+        batch.update(postRef, "likes", admin.firestore.FieldValue.increment(-1))
+        batch.update(userRef, "liked_posts", admin.firestore.FieldValue.arrayRemove(postId))
+
+        await batch.commit();
+
+        console.log("[userFunctions/cancelLikePost] Post like canceled: " + postId);
+        return { result: ResponseCodes.SUCCESS };
     } catch (error) {
+        console.log("[userFunctions/cancelLikePost] Error: " + error);
+        return { result: ResponseCodes.UNKNOWN_ERROR };
     }
 });
 

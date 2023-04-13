@@ -4,4 +4,5 @@ var tripFunctions = require('./tripFunctions');
 var postFunctions = require('./postFunctions');
 var commentFunctions = require('./commentFunctions');
 
-export { login, updateUserNickname } from './userFunctions';
+export * from './userFunctions';
+export * from './tripFunctions';

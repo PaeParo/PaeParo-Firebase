@@ -38,7 +38,7 @@ export const login = functions.https.onCall(async (data) => {
 
         console.log("[userFunctions/loginWithGoogle] User logged in: " + userId);
         return { result: ResponseCodes.SUCCESS }
-    } catch (error: unknown) {
+    } catch (error) {
         console.log("[userFunctions/loginWithGoogle] Error: " + error);
         return { result: ResponseCodes.UNKNOWN_ERROR };
     }

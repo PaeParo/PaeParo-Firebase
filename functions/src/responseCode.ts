@@ -5,8 +5,7 @@ export const ResponseCodes = {
 
     SUCCESS: "success",
     FAILURE: "failure",
-
-    LOGIN_SUCCESS: "user/login-success",
+    
     USER_NOT_FOUND: "user/user-not-found",
     NICKNAME_NOT_SET: "user/nickname-not-set",
     NICKNAME_ALREADY_IN_USE: "user/nickname-already-in-use",

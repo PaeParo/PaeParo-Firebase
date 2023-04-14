@@ -208,6 +208,7 @@ export const removeEventFromTrip = functions.https.onCall(async (data, context) 
 export const updateUserLocation = functions.https.onCall(async (data, context) => {
     try {
         const tripId = data.trip_id;
+        const userId = data.user_id;
         const locationUpdateInfo = data.location_update_info;
 
         if (!(await firestoreTripRef.doc(tripId).get()).exists) {
@@ -216,7 +217,7 @@ export const updateUserLocation = functions.https.onCall(async (data, context) =
         }
 
         await firestoreTripUpdateRef.doc(tripId).update({
-            [`member_locations.${locationUpdateInfo.user_id}`]: locationUpdateInfo
+            [`member_locations.${userId}`]: locationUpdateInfo
         });
 
         console.log("[tripFunctions/updateUserLocation] User location updated: " + tripId);

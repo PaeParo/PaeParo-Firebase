@@ -207,6 +207,22 @@ export const removeEventFromTrip = functions.https.onCall(async (data, context) 
  */
 export const updateUserLocation = functions.https.onCall(async (data, context) => {
     try {
+        const tripId = data.trip_id;
+        const locationUpdateInfo = data.location_update_info;
+
+        if (!(await firestoreTripRef.doc(tripId).get()).exists) {
+            console.log("[tripFunctions/updateUserLocation] Trip not found: " + tripId);
+            return { result: ResponseCodes.TRIP_NOT_FOUND };
+        }
+
+        await firestoreTripUpdateRef.doc(tripId).update({
+            [`member_locations.${locationUpdateInfo.user_id}`]: locationUpdateInfo
+        });
+
+        console.log("[tripFunctions/updateUserLocation] User location updated: " + tripId);
+        return { result: ResponseCodes.SUCCESS };
     } catch (error) {
+        console.log("[tripFunctions/updateUserLocation] Error: " + error);
+        return { result: ResponseCodes.UNKNOWN_ERROR };
     }
 });

@@ -30,7 +30,7 @@ export const createTrip = functions.https.onCall(async (data, context) => {
         return { result: ResponseCodes.SUCCESS, trip_id: tripRef.id };
     } catch (error) {
         console.log("[tripFunctions/createTrip] Error: " + error);
-        return { result: ResponseCodes.UNKNOWN_ERROR };
+        return { result: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -53,7 +53,7 @@ export const updateTrip = functions.https.onCall(async (data, context) => {
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[tripFunctions/updateTrip] Error: " + error);
-        return { result: ResponseCodes.UNKNOWN_ERROR };
+        return { result: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -75,7 +75,7 @@ export const deleteTrip = functions.https.onCall(async (data, context) => {
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[tripFunctions/deleteTrip] Error: " + error);
-        return { result: ResponseCodes.UNKNOWN_ERROR };
+        return { result: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -98,7 +98,7 @@ export const acceptTripInvitation = functions.https.onCall(async (data, context)
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[tripFunctions/acceptTripInvitation] Error: " + error);
-        return { result: ResponseCodes.UNKNOWN_ERROR };
+        return { result: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -121,7 +121,7 @@ export const rejectTripInvitation = functions.https.onCall(async (data, context)
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[tripFunctions/rejectTripInvitation] Error: " + error);
-        return { result: ResponseCodes.UNKNOWN_ERROR };
+        return { result: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -157,7 +157,7 @@ export const addEventToTrip = functions.https.onCall(async (data, context) => {
         return { result: eventRef.id };
     } catch (error) {
         console.log("[tripFunctions/addEventToTrip] Error: " + error);
-        return { result: ResponseCodes.UNKNOWN_ERROR };
+        return { result: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -198,7 +198,7 @@ export const removeEventFromTrip = functions.https.onCall(async (data, context) 
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[tripFunctions/removeEventFromTrip] Error: " + error);
-        return { result: ResponseCodes.UNKNOWN_ERROR };
+        return { result: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -224,6 +224,6 @@ export const updateUserLocation = functions.https.onCall(async (data, context) =
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[tripFunctions/updateUserLocation] Error: " + error);
-        return { result: ResponseCodes.UNKNOWN_ERROR };
+        return { result: ResponseCodes.SERVER_ERROR };
     }
 });

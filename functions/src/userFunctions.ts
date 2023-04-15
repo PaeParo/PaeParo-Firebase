@@ -23,24 +23,24 @@ export const login = functions.https.onCall(async (data) => {
                 liked_posts: []
             });
             console.log("[userFunctions/loginWithGoogle] New user created: " + userId);
-            return { result: ResponseCodes.NICKNAME_NOT_SET };
+            return { result: ResponseCodes.SUCCESS, type: ResponseCodes.NICKNAME_NOT_SET };
         }
 
-        if (userSnapshot.data()?.nickname == "") { // 사용자가 등록되어있지만 닉네임이 설정되어있지 않을 경우
+        if (userSnapshot.data()!.nickname == "") { // 사용자가 등록되어있지만 닉네임이 설정되어있지 않을 경우
             console.log("[userFunctions/loginWithGoogle] User nickname not set: " + userId)
-            return { result: ResponseCodes.NICKNAME_NOT_SET };
+            return { result: ResponseCodes.SUCCESS, type: ResponseCodes.NICKNAME_NOT_SET };
         }
 
-        if (userSnapshot.data()?.age == 0) { // 사용자가 등록되어있지만 세부정보가 설정되어있지 않을 경우
+        if (userSnapshot.data()!.age == 0) { // 사용자가 등록되어있지만 세부정보가 설정되어있지 않을 경우
             console.log("[userFunctions/loginWithGoogle] User detail info not set: " + userId)
-            return { result: ResponseCodes.DETAIL_INFO_NOT_SET };
+            return { result: ResponseCodes.SUCCESS, type: ResponseCodes.DETAIL_INFO_NOT_SET };
         }
 
         console.log("[userFunctions/loginWithGoogle] User logged in: " + userId);
-        return { result: ResponseCodes.SUCCESS }
+        return { result: ResponseCodes.SUCCESS, type: ResponseCodes.ALL_DATA_SET, data: userSnapshot.data()!.nickname };
     } catch (error) {
         console.log("[userFunctions/loginWithGoogle] Error: " + error);
-        return { result: ResponseCodes.UNKNOWN_ERROR };
+        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -55,7 +55,7 @@ export const updateUserNickname = functions.https.onCall(async (data, context) =
         
         if (userSnapshot.docs.length > 0) {
             console.log("[userFunctions/updateUserNickname] Nickname already in use: " + nickname);
-            return { result: ResponseCodes.NICKNAME_ALREADY_IN_USE };
+            return { result: ResponseCodes.FAILURE, type: ResponseCodes.NICKNAME_ALREADY_IN_USE };
         }
 
         await firestoreUserRef.doc(userId).update({
@@ -66,7 +66,7 @@ export const updateUserNickname = functions.https.onCall(async (data, context) =
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[userFunctions/updateUserNickname] Error: " + error);
-        return { result: ResponseCodes.UNKNOWN_ERROR };
+        return { result: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -84,7 +84,7 @@ export const updateUserDetailInfo = functions.https.onCall(async (data, context)
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[userFunctions/updateUserDetailInfo] Error: " + error);
-        return { result: ResponseCodes.UNKNOWN_ERROR };
+        return { result: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -114,7 +114,7 @@ export const likePost = functions.https.onCall(async (data, context) => {
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[userFunctions/likePost] Error: " + error);
-        return { result: ResponseCodes.UNKNOWN_ERROR };
+        return { result: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -144,7 +144,7 @@ export const cancelLikePost = functions.https.onCall(async (data, context) => {
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[userFunctions/cancelLikePost] Error: " + error);
-        return { result: ResponseCodes.UNKNOWN_ERROR };
+        return { result: ResponseCodes.SERVER_ERROR };
     }
 });
 

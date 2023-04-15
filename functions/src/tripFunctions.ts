@@ -27,10 +27,10 @@ export const createTrip = functions.https.onCall(async (data, context) => {
         await batch.commit();
 
         console.log("[tripFunctions/createTrip] Trip created: " + tripRef.id);
-        return { result: ResponseCodes.SUCCESS, trip_id: tripRef.id };
+        return { result: ResponseCodes.SUCCESS, data: tripRef.id };
     } catch (error) {
         console.log("[tripFunctions/createTrip] Error: " + error);
-        return { result: ResponseCodes.SERVER_ERROR };
+        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -44,7 +44,7 @@ export const updateTrip = functions.https.onCall(async (data, context) => {
 
         if (!(await firestoreTripRef.doc(tripId).get()).exists) {
             console.log("[tripFunctions/updateTrip] Trip not found: " + tripId);
-            return { result: ResponseCodes.TRIP_NOT_FOUND };
+            return { result: ResponseCodes.FAILURE, type: ResponseCodes.TRIP_NOT_FOUND };
         }
 
         await firestoreTripRef.doc(tripId).update(updateFields);
@@ -53,7 +53,7 @@ export const updateTrip = functions.https.onCall(async (data, context) => {
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[tripFunctions/updateTrip] Error: " + error);
-        return { result: ResponseCodes.SERVER_ERROR };
+        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -66,7 +66,7 @@ export const deleteTrip = functions.https.onCall(async (data, context) => {
 
         if (!(await firestoreTripRef.doc(tripId).get()).exists) {
             console.log("[tripFunctions/deleteTrip] Trip not found: " + tripId);
-            return { result: ResponseCodes.TRIP_NOT_FOUND };
+            return { result: ResponseCodes.FAILURE, type: ResponseCodes.TRIP_NOT_FOUND };
         }
 
         await firestoreTripRef.doc(tripId).delete();
@@ -75,7 +75,7 @@ export const deleteTrip = functions.https.onCall(async (data, context) => {
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[tripFunctions/deleteTrip] Error: " + error);
-        return { result: ResponseCodes.SERVER_ERROR };
+        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -89,16 +89,16 @@ export const acceptTripInvitation = functions.https.onCall(async (data, context)
 
         if (!(await firestoreTripRef.doc(tripId).get()).exists) {
             console.log("[tripFunctions/acceptTripInvitation] Trip not found: " + tripId);
-            return { result: ResponseCodes.TRIP_NOT_FOUND };
+            return { result: ResponseCodes.FAILURE, type: ResponseCodes.TRIP_NOT_FOUND };
         }
 
         await firestoreTripRef.doc(tripId).update({ [`members.${userId}`]: true });
 
         console.log("[tripFunctions/acceptTripInvitation] Trip invitation accepted: " + tripId);
-        return { result: ResponseCodes.SUCCESS };
+        return { result: ResponseCodes.SUCCESS, data: tripId };
     } catch (error) {
         console.log("[tripFunctions/acceptTripInvitation] Error: " + error);
-        return { result: ResponseCodes.SERVER_ERROR };
+        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -112,7 +112,7 @@ export const rejectTripInvitation = functions.https.onCall(async (data, context)
 
         if (!(await firestoreTripRef.doc(tripId).get()).exists) {
             console.log("[tripFunctions/rejectTripInvitation] Trip not found: " + tripId);
-            return { result: ResponseCodes.TRIP_NOT_FOUND };
+            return { result: ResponseCodes.FAILURE, type: ResponseCodes.TRIP_NOT_FOUND };
         }
 
         await firestoreTripRef.doc(tripId).update({ [`members.${userId}`]: false });
@@ -121,7 +121,7 @@ export const rejectTripInvitation = functions.https.onCall(async (data, context)
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[tripFunctions/rejectTripInvitation] Error: " + error);
-        return { result: ResponseCodes.SERVER_ERROR };
+        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -138,7 +138,7 @@ export const addEventToTrip = functions.https.onCall(async (data, context) => {
 
         if (!(await firestoreTripRef.doc(tripId).get()).exists) {
             console.log("[tripFunctions/addEventToTrip] Trip not found: " + tripId);
-            return { result: ResponseCodes.TRIP_NOT_FOUND };
+            return { result: ResponseCodes.FAILURE, type: ResponseCodes.TRIP_NOT_FOUND };
         }
 
         const batch = firestore.batch();
@@ -154,10 +154,10 @@ export const addEventToTrip = functions.https.onCall(async (data, context) => {
         await batch.commit();
 
         console.log("[tripFunctions/addEventToTrip] Event added to trip: " + tripId);
-        return { result: eventRef.id };
+        return { result: ResponseCodes.SUCCESS, data: eventRef.id };
     } catch (error) {
         console.log("[tripFunctions/addEventToTrip] Error: " + error);
-        return { result: ResponseCodes.SERVER_ERROR };
+        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -174,12 +174,12 @@ export const removeEventFromTrip = functions.https.onCall(async (data, context) 
 
         if (!(await firestoreTripRef.doc(tripId).get()).exists) {
             console.log("[tripFunctions/removeEventFromTrip] Trip not found: " + tripId);
-            return { result: ResponseCodes.TRIP_NOT_FOUND };
+            return { result: ResponseCodes.FAILURE, type: ResponseCodes.TRIP_NOT_FOUND };
         }
 
         if (!(await firestoreEventRef.doc(eventId).get()).exists) {
             console.log("[tripFunctions/removeEventFromTrip] Event not found: " + eventId);
-            return { result: ResponseCodes.EVENT_NOT_FOUND };
+            return { result: ResponseCodes.FAILURE, type: ResponseCodes.EVENT_NOT_FOUND };
         }
 
         const batch = firestore.batch();
@@ -198,7 +198,7 @@ export const removeEventFromTrip = functions.https.onCall(async (data, context) 
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[tripFunctions/removeEventFromTrip] Error: " + error);
-        return { result: ResponseCodes.SERVER_ERROR };
+        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -213,7 +213,7 @@ export const updateUserLocation = functions.https.onCall(async (data, context) =
 
         if (!(await firestoreTripRef.doc(tripId).get()).exists) {
             console.log("[tripFunctions/updateUserLocation] Trip not found: " + tripId);
-            return { result: ResponseCodes.TRIP_NOT_FOUND };
+            return { result: ResponseCodes.FAILURE, type: ResponseCodes.TRIP_NOT_FOUND };
         }
 
         await firestoreTripUpdateRef.doc(tripId).update({
@@ -224,6 +224,6 @@ export const updateUserLocation = functions.https.onCall(async (data, context) =
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[tripFunctions/updateUserLocation] Error: " + error);
-        return { result: ResponseCodes.SERVER_ERROR };
+        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
     }
 });

@@ -33,7 +33,7 @@ export const login = functions.https.onCall(async (data) => {
 
         if (userSnapshot.data()!.age == 0) { // 사용자가 등록되어있지만 세부정보가 설정되어있지 않을 경우
             console.log("[userFunctions/loginWithGoogle] User detail info not set: " + userId)
-            return { result: ResponseCodes.SUCCESS, type: ResponseCodes.DETAIL_INFO_NOT_SET };
+            return { result: ResponseCodes.SUCCESS, type: ResponseCodes.DETAIL_INFO_NOT_SET, data: userSnapshot.data()!.nickname };
         }
 
         console.log("[userFunctions/loginWithGoogle] User logged in: " + userId);
@@ -66,7 +66,7 @@ export const updateUserNickname = functions.https.onCall(async (data, context) =
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[userFunctions/updateUserNickname] Error: " + error);
-        return { result: ResponseCodes.SERVER_ERROR };
+        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -84,7 +84,7 @@ export const updateUserDetailInfo = functions.https.onCall(async (data, context)
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[userFunctions/updateUserDetailInfo] Error: " + error);
-        return { result: ResponseCodes.SERVER_ERROR };
+        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -100,7 +100,7 @@ export const likePost = functions.https.onCall(async (data, context) => {
 
         if (!(await postRef.get()).exists) {
             console.log("[userFunctions/cancelLikePost] Post not found: " + postId);
-            return { result: ResponseCodes.POST_NOT_FOUND };
+            return { result: ResponseCodes.FAILURE, type: ResponseCodes.POST_NOT_FOUND };
         }
 
         const batch = firestore.batch();
@@ -114,7 +114,7 @@ export const likePost = functions.https.onCall(async (data, context) => {
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[userFunctions/likePost] Error: " + error);
-        return { result: ResponseCodes.SERVER_ERROR };
+        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
     }
 });
 
@@ -130,7 +130,7 @@ export const cancelLikePost = functions.https.onCall(async (data, context) => {
 
         if (!(await postRef.get()).exists) {
             console.log("[userFunctions/cancelLikePost] Post not found: " + postId);
-            return { result: ResponseCodes.POST_NOT_FOUND };
+            return { result: ResponseCodes.FAILURE, type: ResponseCodes.POST_NOT_FOUND };
         }
 
         const batch = firestore.batch();
@@ -144,15 +144,16 @@ export const cancelLikePost = functions.https.onCall(async (data, context) => {
         return { result: ResponseCodes.SUCCESS };
     } catch (error) {
         console.log("[userFunctions/cancelLikePost] Error: " + error);
-        return { result: ResponseCodes.SERVER_ERROR };
+        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
     }
 });
 
 /**
  * 1-10. 특정 사용자 취향에 맞는 게시글 불러오기
  */
-export const getPostByUserPreference = functions.https.onCall(async (data, context) => {
+export const getPostByUserPreference = functions.https.onCall(async (data) => {
     try {
     } catch (error) {
+        console.log("[userFunctions/getPostByUserPreference] Error: " + error);
     }
 });

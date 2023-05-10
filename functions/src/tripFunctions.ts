@@ -92,7 +92,10 @@ export const acceptTripInvitation = functions.https.onCall(async (data, context)
             return { result: ResponseCodes.FAILURE, type: ResponseCodes.TRIP_NOT_FOUND };
         }
 
-        await firestoreTripRef.doc(tripId).update({ [`members.${userId}`]: true });
+        await firestoreTripRef.doc(tripId).update({
+            members:admin.firestore.FieldValue.arrayUnion(userId),
+            invitations: admin.firestore.FieldValue.arrayRemove(userId)
+        });
 
         console.log("[tripFunctions/acceptTripInvitation] Trip invitation accepted: " + tripId);
         return { result: ResponseCodes.SUCCESS, data: tripId };
@@ -115,7 +118,9 @@ export const rejectTripInvitation = functions.https.onCall(async (data, context)
             return { result: ResponseCodes.FAILURE, type: ResponseCodes.TRIP_NOT_FOUND };
         }
 
-        await firestoreTripRef.doc(tripId).update({ [`members.${userId}`]: false });
+        await firestoreTripRef.doc(tripId).update({
+            invitations: admin.firestore.FieldValue.arrayRemove(userId)
+        });
 
         console.log("[tripFunctions/rejectTripInvitation] Trip invitation rejected: " + tripId);
         return { result: ResponseCodes.SUCCESS };

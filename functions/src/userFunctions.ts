@@ -16,7 +16,7 @@ export const login = functions.https.onCall(async (data) => {
         if (!userSnapshot.exists) { // 사용자가 등록되지 않았을 경우
             await userRef.set({
                 nickname: "",
-                thumbnail: "",
+                thumbnail: decodedToken.picture || "",
                 age: 0,
                 gender: "",
                 travel_style: [],

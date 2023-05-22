@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { firestore, functions, firestorePostRef, firestoreTripRef } from "./firebase";
+import { admin, firestore, functions, firestorePostRef, firestoreTripRef } from "./firebase";
 import { ResponseCodes } from "./responseCode";
 
 /**
@@ -10,6 +10,8 @@ export const createPost = functions.https.onCall(async (data) => {
         const post = data.post;
         const postRef = firestorePostRef.doc();
         const tripRef = firestoreTripRef.doc(post.trip_id);
+
+        post.created_at = new admin.firestore.Timestamp(post.start_date.seconds, post.start_date.nanoseconds);
 
         if (!(await tripRef.get()).exists) {
             console.log("[postFunctions/createPost] Trip not found: " + post.trip_id);

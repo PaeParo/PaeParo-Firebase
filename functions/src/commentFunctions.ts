@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { firestore, functions, firestorePostRef, firestoreCommentRef } from "./firebase";
+import { admin, firestore, functions, firestorePostRef, firestoreCommentRef } from "./firebase";
 import { ResponseCodes } from "./responseCode";
 
 /**
@@ -10,6 +10,8 @@ export const addComment = functions.https.onCall(async (data) => {
         const comment = data.comment;
         const commentRef = firestoreCommentRef.doc();
         const postRef = firestorePostRef.doc(comment.post_id);
+
+        comment.created_at = new admin.firestore.Timestamp(comment.start_date.seconds, comment.start_date.nanoseconds);
 
         if (!(await postRef.get()).exists) {
             console.log("[commentFunctions/addComment] Post not found: " + comment.post_id);

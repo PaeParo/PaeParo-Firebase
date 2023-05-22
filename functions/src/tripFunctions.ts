@@ -10,6 +10,10 @@ export const createTrip = functions.https.onCall(async (data, context) => {
     try {
         const trip = data.trip;
         const userId = data.user_id;
+
+        trip.start_date = new admin.firestore.Timestamp(trip.start_date.seconds, trip.start_date.nanoseconds);
+        trip.end_date = new admin.firestore.Timestamp(trip.start_date.seconds, trip.start_date.nanoseconds);
+
         const tripRef = firestoreTripRef.doc();
         const tripUpdateRef = firestoreTripUpdateRef.doc(tripRef.id);
         const batch = firestore.batch();
@@ -20,7 +24,7 @@ export const createTrip = functions.https.onCall(async (data, context) => {
                 user_id: userId,
                 event_reference: "",
                 update_type: TripUpdateType.CREATE,
-                timestamp: admin.firestore.Timestamp.now().seconds
+                timestamp: admin.firestore.Timestamp.now()
             }
         );
 
@@ -153,7 +157,7 @@ export const addEventToTrip = functions.https.onCall(async (data, context) => {
             user_id: userId,
             event_reference: `events/${tripId}/trip_events/${eventRef.id}`,
             update_type: TripUpdateType.ADD,
-            timestamp: admin.firestore.Timestamp.now().seconds
+            timestamp: admin.firestore.Timestamp.now()
         });
 
         await batch.commit();
@@ -194,7 +198,7 @@ export const removeEventFromTrip = functions.https.onCall(async (data, context) 
             user_id: userId,
             event_reference: `events/${tripId}/trip_events/${eventId}`,
             update_type: TripUpdateType.REMOVE,
-            timestamp: admin.firestore.Timestamp.now().seconds
+            timestamp: admin.firestore.Timestamp.now()
         });
 
         await batch.commit();

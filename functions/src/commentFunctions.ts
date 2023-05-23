@@ -5,28 +5,28 @@ import { ResponseCodes } from "./responseCode";
 /**
  * 5-01. 특정 게시물과 연결된 댓글 추가
  */
-export const addComment = functions.https.onCall(async (data) => {
-    try {
-        const comment = data.comment;
-        const commentRef = firestoreCommentRef.doc();
-        const postRef = firestorePostRef.doc(comment.post_id);
+// export const addComment = functions.https.onCall(async (data) => {
+//     try {
+//         const comment = data.comment;
+//         const commentRef = firestoreCommentRef.doc();
+//         const postRef = firestorePostRef.doc(comment.post_id);
 
-        comment.created_at = new admin.firestore.Timestamp(comment.start_date.seconds, comment.start_date.nanoseconds);
+//         comment.created_at = new admin.firestore.Timestamp(comment.start_date.seconds, comment.start_date.nanoseconds);
 
-        if (!(await postRef.get()).exists) {
-            console.log("[commentFunctions/addComment] Post not found: " + comment.post_id);
-            return { result: ResponseCodes.FAILURE, type: ResponseCodes.POST_NOT_FOUND };
-        }
+//         if (!(await postRef.get()).exists) {
+//             console.log("[commentFunctions/addComment] Post not found: " + comment.post_id);
+//             return { result: ResponseCodes.FAILURE, type: ResponseCodes.POST_NOT_FOUND };
+//         }
 
-        await commentRef.set(comment);
+//         await commentRef.set(comment);
 
-        console.log("[commentFunctions/addComment] Comment created: " + commentRef.id);
-        return { result: ResponseCodes.SUCCESS, data: commentRef.id };
-    } catch (error) {
-        console.log("[commentFunctions/addComment] Error: " + error);
-        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
-    }
-});
+//         console.log("[commentFunctions/addComment] Comment created: " + commentRef.id);
+//         return { result: ResponseCodes.SUCCESS, data: commentRef.id };
+//     } catch (error) {
+//         console.log("[commentFunctions/addComment] Error: " + error);
+//         return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
+//     }
+// });
 
 /**
  * 5-02. 특정 댓글 수정

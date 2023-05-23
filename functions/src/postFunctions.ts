@@ -5,28 +5,28 @@ import { ResponseCodes } from "./responseCode";
 /**
  * 4-01. 특정 여행과 연결된 게시물 추가
  */
-export const createPost = functions.https.onCall(async (data) => {
-    try {
-        const post = data.post;
-        const postRef = firestorePostRef.doc();
-        const tripRef = firestoreTripRef.doc(post.trip_id);
+// export const createPost = functions.https.onCall(async (data) => {
+//     try {
+//         const post = data.post;
+//         const postRef = firestorePostRef.doc();
+//         const tripRef = firestoreTripRef.doc(post.trip_id);
 
-        post.created_at = new admin.firestore.Timestamp(post.start_date.seconds, post.start_date.nanoseconds);
+//         post.created_at = new admin.firestore.Timestamp(post.start_date.seconds, post.start_date.nanoseconds);
 
-        if (!(await tripRef.get()).exists) {
-            console.log("[postFunctions/createPost] Trip not found: " + post.trip_id);
-            return { result: ResponseCodes.FAILURE, type: ResponseCodes.TRIP_NOT_FOUND };
-        }
+//         if (!(await tripRef.get()).exists) {
+//             console.log("[postFunctions/createPost] Trip not found: " + post.trip_id);
+//             return { result: ResponseCodes.FAILURE, type: ResponseCodes.TRIP_NOT_FOUND };
+//         }
 
-        await postRef.set(post);
+//         await postRef.set(post);
 
-        console.log("[postFunctions/createPost] Post created: " + postRef.id);
-        return { result: ResponseCodes.SUCCESS, data: postRef.id };
-    } catch (error) {
-        console.log("[postFunctions/createPost] Error: " + error);
-        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
-    }
-});
+//         console.log("[postFunctions/createPost] Post created: " + postRef.id);
+//         return { result: ResponseCodes.SUCCESS, data: postRef.id };
+//     } catch (error) {
+//         console.log("[postFunctions/createPost] Error: " + error);
+//         return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
+//     }
+// });
 
 /**
  * 4-04. 특정 게시물 수정

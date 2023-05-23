@@ -6,37 +6,37 @@ import { TripUpdateType } from "./constants";
 /**
  * 2-01. 새로운 여행 생성
  */
-export const createTrip = functions.https.onCall(async (data, context) => {
-    try {
-        const trip = data.trip;
-        const userId = data.user_id;
+// export const createTrip = functions.https.onCall(async (data, context) => {
+//     try {
+//         const trip = data.trip;
+//         const userId = data.user_id;
 
-        trip.start_date = new admin.firestore.Timestamp(trip.start_date.seconds, trip.start_date.nanoseconds);
-        trip.end_date = new admin.firestore.Timestamp(trip.start_date.seconds, trip.start_date.nanoseconds);
+//         trip.start_date = new admin.firestore.Timestamp(trip.start_date.seconds, trip.start_date.nanoseconds);
+//         trip.end_date = new admin.firestore.Timestamp(trip.start_date.seconds, trip.start_date.nanoseconds);
 
-        const tripRef = firestoreTripRef.doc();
-        const tripUpdateRef = firestoreTripUpdateRef.doc(tripRef.id);
-        const batch = firestore.batch();
+//         const tripRef = firestoreTripRef.doc();
+//         const tripUpdateRef = firestoreTripUpdateRef.doc(tripRef.id);
+//         const batch = firestore.batch();
 
-        batch.set(tripRef, trip);
-        batch.set(tripUpdateRef,
-            {
-                user_id: userId,
-                event_reference: "",
-                update_type: TripUpdateType.CREATE,
-                timestamp: admin.firestore.Timestamp.now()
-            }
-        );
+//         batch.set(tripRef, trip);
+//         batch.set(tripUpdateRef,
+//             {
+//                 user_id: userId,
+//                 event_reference: "",
+//                 update_type: TripUpdateType.CREATE,
+//                 timestamp: admin.firestore.Timestamp.now()
+//             }
+//         );
 
-        await batch.commit();
+//         await batch.commit();
 
-        console.log("[tripFunctions/createTrip] Trip created: " + tripRef.id);
-        return { result: ResponseCodes.SUCCESS, data: tripRef.id };
-    } catch (error) {
-        console.log("[tripFunctions/createTrip] Error: " + error);
-        return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
-    }
-});
+//         console.log("[tripFunctions/createTrip] Trip created: " + tripRef.id);
+//         return { result: ResponseCodes.SUCCESS, data: tripRef.id };
+//     } catch (error) {
+//         console.log("[tripFunctions/createTrip] Error: " + error);
+//         return { result: ResponseCodes.FAILURE, type: ResponseCodes.SERVER_ERROR };
+//     }
+// });
 
 /**
  * 2-03. 특정 여행 수정
